@@ -95,13 +95,21 @@ public final class GameDataManager {
         try {
             File root = a.getExternalFilesDir(null);
             if (root == null) return false;
-            File marker = new File(root, MARKER);
-            if (!marker.isFile()) return false;
+            // Sentinel is the source of truth: if game data files exist, data is installed
+            // (marker may be missing if data came from old installer or manual copy).
+            boolean sentinelOk = true;
             if (info.sentinel != null && !info.sentinel.isEmpty()) {
-                if (!new File(root, info.sentinel).exists()) return false;
+                sentinelOk = new File(root, info.sentinel).exists();
+            } else {
+                String[] list = root.list();
+                sentinelOk = list != null && list.length > 0;
             }
-            String[] list = root.list();
-            return list != null && list.length > 0;
+            if (sentinelOk) {
+                // adopt: write marker so future checks are fast
+                markInstalled(a, info);
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             return false;
         }
