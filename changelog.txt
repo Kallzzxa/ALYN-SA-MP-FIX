@@ -1,0 +1,5 @@
+ALYN-SA-MP-FIX changelog
+- Fixed: removed signature check crash ("No remake idiot")
+- Fixed: BASS audio native crash hardening
+- Changed: server status check now uses app.json (status_server) from GitHub
+- Added: in-game data downloader (files.zip via MediaFire)
