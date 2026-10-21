@@ -28,8 +28,18 @@ android {
         applyToBuildTypes = "ALL"
     }
 
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("ALYN_KEYSTORE_PATH") ?: "release.keystore")
+            storePassword System.getenv("ALYN_STORE_PASSWORD")
+            keyAlias System.getenv("ALYN_KEY_ALIAS")
+            keyPassword System.getenv("ALYN_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
