@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.joom.paranoid.Obfuscate;
+
 import com.rockstargames.gtasa.GTASA;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import ro.alynsampmobile.game.ui.UI;
 
-@Obfuscate
+
 public class SAMP extends GTASA {
     private static final String TAG = "SAMP";
 

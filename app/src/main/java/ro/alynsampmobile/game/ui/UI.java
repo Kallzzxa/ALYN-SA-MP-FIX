@@ -8,7 +8,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.joom.paranoid.Obfuscate;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import ro.alynsampmobile.game.ui.widgets.Scoreboard;
 import ro.alynsampmobile.game.ui.widgets.Voice;
 import ro.alynsampmobile.game.ui.widgets.WantedLevel;
 
-@Obfuscate
+
 public class UI implements ButtonPanel.Listener, Voice.Listener, Dialog.Listener, Scoreboard.Listener, Keyboard.Listener, Chat.Listener, HeightProvider.Listener {
     private static final String TAG = "UI";
 
