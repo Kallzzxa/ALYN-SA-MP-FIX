@@ -181,8 +181,8 @@ extern "C" JNIEXPORT void JNICALL Java_ro_alynsampmobile_game_SAMP_initializeSAM
 
 
 
-	Client::initialize(gameDirStr, isOffline);
 	g_java = new Java(env, sampObj, uiObj);
+	Client::initialize(gameDirStr, isOffline);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_ro_alynsampmobile_game_ui_UI_keyboardSend(JNIEnv* env, jobject obj, jbyteArray str)
