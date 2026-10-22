@@ -68,7 +68,17 @@ public class Utils {
 
     public static GPUType GPU_TYPE = GPUType.NONE;
 
+    private static volatile Boolean cachedAppStatus = null;
+    private static volatile long cachedAppStatusTime = 0;
+    private static final long APP_STATUS_CACHE_MS = 5 * 60 * 1000; // 5 minutes
+
     public static boolean appStatus() {
+        // ALYN-SA-MP-FIX: use cached value to avoid blocking UI thread on every call
+        long now = System.currentTimeMillis();
+        if (cachedAppStatus != null && (now - cachedAppStatusTime) < APP_STATUS_CACHE_MS) {
+            return cachedAppStatus;
+        }
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Boolean> future = executor.submit(() -> {
             try {
@@ -77,22 +87,25 @@ public class Utils {
                 return json.optBoolean("status_server", true);
             } catch (IOException | JSONException e) {
                 System.out.println("Failed to get app status: " + e.getMessage());
-                return false;
+                // on network failure, assume up if we had a cached true, else true (fail-open)
+                return cachedAppStatus != null ? cachedAppStatus : true;
             }
         });
 
-        boolean status = false;
+        boolean status = true;
         try {
-            // Wait for the completion of the thread and get the result.
-            // You might want to specify a timeout to avoid waiting indefinitely.
-            status = future.get(); // You can add a timeout here if necessary
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("2Failed to get app status: " + e.getMessage());
-            Thread.currentThread().interrupt(); // Restore interrupted status
+            // timeout 8s max to avoid ANR
+            status = future.get(8, java.util.concurrent.TimeUnit.SECONDS);
+        } catch (Exception e) {
+            System.out.println("appStatus timeout/fail: " + e.getMessage());
+            status = cachedAppStatus != null ? cachedAppStatus : true;
+            future.cancel(true);
         } finally {
             executor.shutdown();
         }
 
+        cachedAppStatus = status;
+        cachedAppStatusTime = now;
         System.out.println("App server status: " + status);
         return status;
     }

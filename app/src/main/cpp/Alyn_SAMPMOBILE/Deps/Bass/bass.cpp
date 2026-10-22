@@ -3,6 +3,8 @@
 #include "bass.h"
 #include "../../Client.h"
 
+bool g_bBassLoaded = false;
+
 int (*BASS_Init) (uint32_t, uint32_t, uint32_t);
 int (*BASS_Free) (void);
 int (*BASS_SetConfigPtr) (uint32_t, const char*);
@@ -86,4 +88,11 @@ void LoadBassLibrary()
 	BASS_ChannelSet3DAttributes = (int (*)(uint32_t, int, float, float, int, int, float))dlsym(v0, "BASS_ChannelSet3DAttributes");
 	BASS_ChannelSet3DPosition = (int (*)(uint32_t, const BASS_3DVECTOR*, const BASS_3DVECTOR*, const BASS_3DVECTOR*))dlsym(v0, "BASS_ChannelSet3DPosition");
 	BASS_SetVolume = (int (*)(float))dlsym(v0, "BASS_SetVolume");
+
+	// ALYN-SA-MP-FIX: validate critical function pointers to avoid null-call crashes
+	g_bBassLoaded = (BASS_Init && BASS_Free && BASS_StreamCreateURL && BASS_ChannelPlay &&
+		BASS_ChannelStop && BASS_StreamFree && BASS_SetConfig);
+	if (!g_bBassLoaded) {
+		spdlog::warn("BASS library missing critical symbols - audio disabled");
+	}
 }

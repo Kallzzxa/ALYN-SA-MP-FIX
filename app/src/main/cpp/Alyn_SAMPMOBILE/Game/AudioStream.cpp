@@ -62,6 +62,12 @@ bool AudioStream::Initialize()
 
 	bassStream = 0;
 
+	// ALYN-SA-MP-FIX: don't touch BASS if library failed to load properly
+	if (!g_bBassLoaded) {
+		spdlog::warn("AudioStream::Initialize() - BASS not loaded, skipping");
+		return false;
+	}
+
 	BASS_Free();
 	if (!BASS_Init(-1, 44100, 0)) return false;
 
