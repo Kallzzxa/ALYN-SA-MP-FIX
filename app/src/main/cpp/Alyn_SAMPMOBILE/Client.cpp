@@ -135,7 +135,7 @@ void Client::initialize(const std::string& gameDir, bool offlineMode)
 	firebase::crashlytics::SetCustomKey("libGTASA.so", str);
 
 	sa::Initialize();
-	LoadBassLibrary();
+	// ALYN-SA-MP-FIX: BASS disabled (was causing crashes) - LoadBassLibrary();
 
 	Hooks::install();
 	Patches::apply();
