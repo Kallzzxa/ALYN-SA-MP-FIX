@@ -12,38 +12,22 @@ extern NetGame* pNetGame;
 
 Java::Java(JNIEnv* env, jobject sampObj, jobject uiObj)
 {
-	spdlog::info("Initializing java..");
-
-	if (!env) {
-		spdlog::error("JNIEnv is null!");
+	if (!env || !sampObj || !uiObj) {
 		return;
 	}
-	spdlog::info("Java: env ok");
-
-	if (!sampObj || !uiObj) {
-		spdlog::error("Invalid java objects");
-		return;
-	}
-	spdlog::info("Java: objects ok");
 
 	m_sampActivity = env->NewGlobalRef(sampObj);
-	spdlog::info("Java: samp global ref ok");
 	m_uiActivity = env->NewGlobalRef(uiObj);
-	spdlog::info("Java: ui global ref ok");
 
 	jclass sampClass = env->GetObjectClass(sampObj);
 	if (!sampClass) {
-		spdlog::error("SAMP class not found");
 		return;
 	}
-	spdlog::info("Java: samp class ok");
 
 	jclass uiClass = env->GetObjectClass(uiObj);
 	if (!uiClass) {
-		spdlog::error("UI class not found");
 		return;
 	}
-	spdlog::info("Java: ui class ok");
 
 	// ALYN-SA-MP-FIX: clear any pending JNI exception before method lookups
 	if (env->ExceptionCheck()) {
