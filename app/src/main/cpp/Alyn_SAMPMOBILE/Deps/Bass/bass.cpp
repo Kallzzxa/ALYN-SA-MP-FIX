@@ -45,7 +45,8 @@ int (*BASS_SetVolume) (float);
 void LoadBassLibrary()
 {
 	spdlog::info("Loading BASS library..");
-    void* v0 = dlopen("libBASS.so", RTLD_LAZY);
+    void* v0 = dlopen("libbass.so", RTLD_LAZY);
+	if (!v0) v0 = dlopen("libBASS.so", RTLD_LAZY); // fallback for case variants
 
 	if (!v0) {
 		spdlog::info(dlerror());
