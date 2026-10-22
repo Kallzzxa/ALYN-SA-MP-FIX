@@ -29,36 +29,14 @@ Java::Java(JNIEnv* env, jobject sampObj, jobject uiObj)
 		return;
 	}
 
-	// ALYN-SA-MP-FIX: clear any pending JNI exception before method lookups
-	if (env->ExceptionCheck()) {
-		spdlog::error("Java: pending exception before GetMethodID, clearing");
-		env->ExceptionClear();
-	}
-
 	m_setPauseState = env->GetMethodID(uiClass, "setPauseState", "(Z)V");
-	if (!m_setPauseState) {
-		spdlog::error("Java: setPauseState not found!");
-		if (env->ExceptionCheck()) env->ExceptionClear();
-	} else {
-		spdlog::info("Java: setPauseState ok");
-	}
-
 	m_showLoadingScreen = env->GetMethodID(uiClass, "showLoadingScreen", "(Z)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
 	m_showKeyboard = env->GetMethodID(uiClass, "showKeyboard", "(Z)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
 	m_showDialog = env->GetMethodID(uiClass, "showDialog", "(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
 	m_showEditObject = env->GetMethodID(uiClass, "showEditObject", "(Z)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
-
 	m_showWantedLevel = env->GetMethodID(uiClass, "showWantedLevel", "(Z)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
 	m_setWantedLevel = env->GetMethodID(uiClass, "setWantedLevel", "(I)V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
-
 	m_exitGame = env->GetMethodID(uiClass, "exitGame", "()V");
-	if (env->ExceptionCheck()) env->ExceptionClear();
 
 	env->DeleteLocalRef(sampClass);
 	env->DeleteLocalRef(uiClass);
